@@ -8,6 +8,7 @@ using namespace std;
 #define KERNEL_PATH "/proc/version_signature"
 #define COMPUTER_NAME_PATH "/etc/hostname"
 #define CPU_INFO_PATH "/proc/cpuinfo"
+#define CPU_LOAD_PATH "/proc/loadavg"
 
 #define MESSAGE "No information"
 
@@ -17,6 +18,11 @@ struct cpu_information{
   string model_name;
   unsigned cores;
   unsigned cache_size;
+  double one_min;
+  double five_min;
+  double ten_min;
+  unsigned run;
+  unsigned all;
 };
 
 // this class contain main information about computer
@@ -27,6 +33,7 @@ private:
   string computer_name;        // contain computer name
   cpu_information cpu_info;    // contain main information about CPU
 
+
 public:
   computer_information();
   void output();
@@ -36,8 +43,9 @@ private:
   unsigned to_unsigned(string); // convert string to unsigned
   void get_kernel();            // get information from KERNEL_PATH
   void get_distribution();      // get information from DISTRIBUTION_PATH
-  void get_computer_name();     // get information from COMPUTER_NAME_PATH
-  void get_cpu_information();   // get information from CPU_INFO_PATH
+  void get_computer_name();     // get information about computer's name
+  void get_cpu_information();   // get information main information about CPU
+  void get_cpu_load();          // get information about processes and CPU load
 };
 
 int main(){
@@ -52,6 +60,7 @@ computer_information::computer_information(){
   get_distribution();
   get_computer_name();
   get_cpu_information();
+  get_cpu_load();
 }
 
 string computer_information::get_value(string buffer){
@@ -72,9 +81,15 @@ void computer_information::output(){
   << "Distribution: " << distribution << endl
   << "Kernel: " << kernel << endl << endl
   << "CPU information:" << endl
-  << "Model: " << cpu_info.model_name << endl
-  << "Cores: " << cpu_info.cores << endl
-  << "Cache size: " << cpu_info.cache_size << endl;
+  << "\tModel: " << cpu_info.model_name << endl
+  << "\tCores: " << cpu_info.cores << endl
+  << "\tCache size: " << cpu_info.cache_size << endl << endl
+  << "Load process: " << endl
+  << "\t1 minute: " << cpu_info.one_min << "%" << endl
+  << "\t5 minutes: " << cpu_info.five_min << "%" << endl
+  << "\t10 minutes: " << cpu_info.ten_min << "%" << endl
+  << "\tRun: " << cpu_info.run << endl
+  << "\tAll: " << cpu_info.all <<endl;
 }
 
 void computer_information::get_kernel(){
@@ -149,4 +164,40 @@ void computer_information::get_cpu_information(){
       cpu_info.cache_size = to_unsigned(get_value(buffer));
     }
   }
+  fin.close();
+
+
+}
+
+void computer_information::get_cpu_load() {
+  ifstream fin(CPU_LOAD_PATH);
+  if(!fin.is_open()){
+    cpu_info.one_min = 0;
+    cpu_info.five_min = 0;
+    cpu_info.ten_min = 0;
+    cpu_info.run = 0;
+    cpu_info.all = 0;
+    perror(CPU_LOAD_PATH);
+    return;
+  }
+
+  string buffer;
+  getline(fin, buffer);
+  unsigned long start = 0;
+  unsigned long end = buffer.find(' ');
+  cpu_info.one_min = atof(buffer.substr(start, end - start).c_str()) * 100;
+  start = end + 1;
+  end = buffer.find(' ', start);
+  cpu_info.five_min = atof(buffer.substr(start, end - start).c_str()) * 100;
+  start = end + 1;
+  end = buffer.find(' ', start);
+  cpu_info.ten_min = atof(buffer.substr(start, end - start).c_str()) * 100;
+  start = end + 1;
+  end = buffer.find('/', start);
+  cpu_info.run = to_unsigned(buffer.substr(start, end - start));
+  start = end + 1;
+  end = buffer.find(' ', start);
+  cpu_info.all = to_unsigned(buffer.substr(start, end - start));
+
+  fin.close();
 }
