@@ -15,14 +15,14 @@ using namespace std;
 
 // struct contain fields with main information about CPU
 struct cpu_information{
-  string model_name;
-  unsigned cores;
-  unsigned cache_size;
-  double one_min;
-  double five_min;
-  double ten_min;
-  unsigned run;
-  unsigned all;
+  string model_name;    // contain CPU's model
+  unsigned cores;       // contain number of cores
+  unsigned cache_size;  // contain cache size
+  double one_min;       // contain CPU's load for last minute
+  double five_min;      // contain CPU's load for last five minutes
+  double ten_min;       // contain CPU's load for last ten minutes
+  unsigned run;         // contain number of run processes
+  unsigned all;         // contain number of all system processes
 };
 
 // this class contain main information about computer
