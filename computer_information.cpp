@@ -85,9 +85,9 @@ void computer_information::output(){
   << "\tCores: " << cpu_info.cores << endl
   << "\tCache size: " << cpu_info.cache_size << endl << endl
   << "Load process: " << endl
-  << "\t1 minute: " << cpu_info.one_min << "%" << endl
-  << "\t5 minutes: " << cpu_info.five_min << "%" << endl
-  << "\t10 minutes: " << cpu_info.ten_min << "%" << endl
+  << "\t1 minute: " << cpu_info.one_min << endl
+  << "\t5 minutes: " << cpu_info.five_min << endl
+  << "\t10 minutes: " << cpu_info.ten_min << endl
   << "\tRun: " << cpu_info.run << endl
   << "\tAll: " << cpu_info.all <<endl;
 }
@@ -185,13 +185,13 @@ void computer_information::get_cpu_load() {
   getline(fin, buffer);
   unsigned long start = 0;
   unsigned long end = buffer.find(' ');
-  cpu_info.one_min = atof(buffer.substr(start, end - start).c_str()) * 100;
+  cpu_info.one_min = atof(buffer.substr(start, end - start).c_str());
   start = end + 1;
   end = buffer.find(' ', start);
-  cpu_info.five_min = atof(buffer.substr(start, end - start).c_str()) * 100;
+  cpu_info.five_min = atof(buffer.substr(start, end - start).c_str());
   start = end + 1;
   end = buffer.find(' ', start);
-  cpu_info.ten_min = atof(buffer.substr(start, end - start).c_str()) * 100;
+  cpu_info.ten_min = atof(buffer.substr(start, end - start).c_str());
   start = end + 1;
   end = buffer.find('/', start);
   cpu_info.run = to_unsigned(buffer.substr(start, end - start));
