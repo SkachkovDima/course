@@ -1,63 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <unistd.h>
-#include <wait.h>
-#include <list>
-
-using namespace std;
-
-#define SUDO "/usr/bin/sudo"
-#define REPORT "/home/linux/University/course/reports/nmap report"
-#define PORT "/home/linux/University/course/reports/port"
-
-struct port_info{
-    unsigned number;      // number of port
-    string protocol;      // name of protocol
-};
-
-class nmap{
-private:
-  list<port_info> dangerous;      // ports, that opened on PC and vulnerable to
-                                  // hacker's attack
-  list<string> report;            // info about opened ports
-  list<string> vulnerable_ports;  // info about vulnerable ports
-
-public:
-  void output();    // output info about dangerous ports
-  void check();     // check ports, that vulnerable to hacker's attack
-
-private:
-  void read_report();  // read info about opened ports
-  void read_ports();   // read_information about vulnerable ports
-  vector<unsigned> convert_ports(string);  // get port's valur from string
-  unsigned to_unsigned(string);            // convert string to unsigned
-};
-
-int main(int argc, char* argv[]) {
-
-  auto pid = fork();
-
-  switch (pid) {
-    case -1:
-      perror("fork nmap");
-      return 0;
-    case 0:
-      if (execl(SUDO, "sudo", "nmap", "-sS", "-oN", REPORT,
-                "localhost", nullptr) == -1) {
-        perror("execl nmap");
-        return -1;
-      }
-  }
-  waitpid(pid, 0, 0);
-
-  nmap ports;
-  ports.check();
-  ports.output();
-
-  return 0;
-}
+#include "../include/nmap.h"
 
 // check all open ports
 void nmap::check() {
@@ -170,11 +111,27 @@ vector<unsigned> nmap::convert_ports(string buffer) {
   return ports_number;
 }
 
-// convert string to unsigned
-unsigned nmap::to_unsigned(string buffer) {
-  unsigned number;
-  stringstream stream;
-  stream << buffer.c_str();
-  stream >> number;
-  return number;
+extern "C" int start() {
+
+  auto pid = fork();
+  switch (pid) {
+    case -1:
+      perror("fork nmap");
+      return 0;
+    case 0:
+      if (execl(SUDO, "sudo", "nmap", "-sS", "-oN", REPORT,
+                "localhost", nullptr) == -1) {
+        perror("execl nmap");
+        return -1;
+      }
+  }
+  waitpid(pid, 0, 0);
+
+  return 0;
+}
+
+extern "C" void result(){
+  nmap ports;
+  ports.check();
+  ports.output();
 }
