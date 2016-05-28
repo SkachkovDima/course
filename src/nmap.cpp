@@ -88,7 +88,7 @@ void nmap::read_ports() {
   while (!fin.eof()) {
     getline(fin, buffer);
     if (fin.eof()) break;
-    if (buffer.empty() || buffer.at(0) == '/') continue;
+    if (buffer.empty() || buffer.at(0) == '#') continue;
     vulnerable_ports.push_back(buffer);
   }
 

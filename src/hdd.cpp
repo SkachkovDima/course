@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
-#include <sys/wait.h>
 #include <list>
 
 using namespace std;

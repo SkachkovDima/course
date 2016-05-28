@@ -29,12 +29,8 @@ list<string> get_swaps(){
   return swaps;
 }
 
-
 string info;          // contain result of testing
 list<string> swaps;
-
-
-
 
 extern "C" int start() {
   swaps = get_swaps();
