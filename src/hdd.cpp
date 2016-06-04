@@ -33,7 +33,8 @@ extern "C" int start() {
 }
 
 extern "C" void result(){
-  cout << "Oh yeaah!" << endl << "yeaa!" << endl;
+  cout << "Testing of HDD end. Report contain information "
+            "about statment of HDD" << endl;
 }
 
 // get name of partitions from /proc/partitions

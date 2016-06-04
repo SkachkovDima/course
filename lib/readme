@@ -1,0 +1,6 @@
+# If you want to add your test, you should add your dynamic library in this
+# directory. This library will automaticly link with main program.
+#
+# Dynamic library should contain the following functions:
+#            start() - this functions start testing
+#            result() - this functions write results of testing in report's file
