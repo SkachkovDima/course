@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define LIB_PATH "/home/linux/University/course/build/lib/"
+#define LIB_PATH "/home/linux/University/course/lib/"
 #define EXTENSION ".so"
 
 int select (const struct dirent *dir) {

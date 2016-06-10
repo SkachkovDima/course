@@ -13,7 +13,7 @@ using namespace std;
 
 #define SUDO "/usr/bin/sudo"
 #define REPORT "/tmp/nmap report"
-#define PORT "/home/linux/University/course/port"
+#define PORT "../port"
 
 struct port_info{
   unsigned number;      // number of port
